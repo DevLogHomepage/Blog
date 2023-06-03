@@ -1,0 +1,15 @@
+.nav{
+    display:flex;
+    justify-content: center;
+}
+
+.nav-selection{
+    padding:20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.nav-link{
+    text-decoration: none;
+    color:var(--basic-color);
+}

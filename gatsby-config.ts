@@ -1,4 +1,5 @@
 import type { GatsbyConfig } from "gatsby";
+import path from "path";
 
 const config: GatsbyConfig = {
   siteMetadata: {
@@ -23,7 +24,17 @@ const config: GatsbyConfig = {
       "path": "./src/pages/"
     },
     __key: "pages"
-  }]
+  },
+  {
+    resolve: `gatsby-plugin-alias-imports`,
+    options: {
+      alias: {
+        "@": path.resolve(__dirname, 'src')
+      },
+      extensions: []
+    }
+  }
+]
 };
 
 export default config;

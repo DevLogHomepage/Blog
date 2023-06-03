@@ -1,0 +1,14 @@
+main{
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+footer{
+  position: fixed;
+  width:100vw;
+  bottom: 0;
+  display:flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}

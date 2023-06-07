@@ -1,5 +1,5 @@
 import "./main.css"
-import Logo from "@/src/component/logo";
+import Logo from "#root/src/component/logo";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 

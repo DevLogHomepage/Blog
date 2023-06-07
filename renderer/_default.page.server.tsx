@@ -13,7 +13,7 @@ import './global.css'
 import { getDataFromTree } from '@apollo/client/react/ssr'
 import { ApolloClient, ApolloProvider } from '@apollo/client'
 import React, { ReactNode } from 'react'
-import Navigation from '@/router/navigation'
+import Navigation from '#root/router/navigation'
 
 async function render(pageContext: PageContextServer) {
   const { Page, pageProps,urlPathname,apolloClient } = pageContext
@@ -53,7 +53,6 @@ async function render(pageContext: PageContextServer) {
   return {
     documentHtml,
     pageContext: {
-      // We can add some `pageContext` here, which is useful if we want to do page redirection https://vite-plugin-ssr.com/page-redirection
       apolloIntialState
     }
   }

@@ -1,12 +1,12 @@
 export { render }
+import { ApolloClient, ApolloProvider, InMemoryCache, NormalizedCacheObject } from '@apollo/client'
 
 import { hydrateRoot } from 'react-dom/client'
-import type { PageContextClient } from './types'
-import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import { ApolloClient, ApolloProvider, InMemoryCache, NormalizedCacheObject } from '@apollo/client'
-import App from './App'
-import Navigation from '@/router/navigation'
+import type { PageContextClient } from './types'
+import Navigation from '#root/router/navigation'
+
+import React from 'react'
 
 async function render(pageContext:PageContextClient) {
   const { Page } = pageContext

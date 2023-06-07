@@ -1,14 +1,19 @@
+/* navigation header box */
+/* 네이게이션박스 설정 css*/
 .nav{
     display:flex;
     justify-content: center;
 }
-
+/* navigation box selection panel */
+/* 네이게이션 바 선택 박스 */
 .nav-selection{
     padding:20px;
     font-size: 1.2rem;
     font-weight: bold;
 }
 
+/* navigation box link component css*/
+/* 네이게이션바 링크 관련 css*/
 .nav-link{
     text-decoration: none;
     color:var(--basic-color);

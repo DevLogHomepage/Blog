@@ -9,17 +9,18 @@ import { ApolloClient,InMemoryCache } from '@apollo/client/core'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-startServer()
+startServer()                                                                                         // Start a react.js with express 
 
-async function startServer() {
-  const app = express()
+async function startServer() {                                                                        
+  const app = express()                                                                               // Create a express app
 
-  app.use(compression())
+  app.use(compression())                                                                              // Use compression(middle ware)                        
 
-  if (isProduction) {
+  if (isProduction) {                                                                                 // If production mode
     const sirv = (await import('sirv')).default
     app.use(sirv(`${root}/dist/client`))
-  } else {
+  } 
+  else {                                                                                              // If development mode
     const vite = await import('vite')
     const viteDevMiddleware = (
       await vite.createServer({

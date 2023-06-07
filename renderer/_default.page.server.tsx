@@ -2,7 +2,6 @@ export { render }
 // See https://vite-plugin-ssr.com/data-fetching
 export const passToClient = ['pageProps', 'urlPathname','apolloIntialState']
 
-import { renderToString } from 'react-dom/server'
 import { escapeInject, dangerouslySkipEscape } from 'vite-plugin-ssr/server'
 import { StaticRouter } from 'react-router-dom/server'
 import logoUrl from './logo.svg'
@@ -11,16 +10,17 @@ import App from './App'
 
 import './global.css'
 import { getDataFromTree } from '@apollo/client/react/ssr'
-import { ApolloClient, ApolloProvider } from '@apollo/client'
-import React, { ReactNode } from 'react'
+import { ApolloProvider } from '@apollo/client'
+import React from 'react'
 import Navigation from '#root/router/navigation'
 
 async function render(pageContext: PageContextServer) {
   const { Page, pageProps,urlPathname,apolloClient } = pageContext
   // This render() hook only supports SSR, see https://vite-plugin-ssr.com/render-modes for how to modify render() to support SPA
   if (!Page) throw new Error('My render() hook expects pageContext.Page to be defined')
+
   let tree = (
-    <React.Fragment>
+    <React.Fragment>                                        
       <ApolloProvider client={apolloClient}>
         <StaticRouter location={urlPathname}>
           <Navigation/>
@@ -28,7 +28,8 @@ async function render(pageContext: PageContextServer) {
         </StaticRouter>
       </ApolloProvider>
     </React.Fragment>
-  ) 
+  )
+  
   const pageHtml = await getDataFromTree(tree)
   const apolloIntialState = apolloClient?.extract()
   // See https://vite-plugin-ssr.com/head

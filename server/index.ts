@@ -1,13 +1,14 @@
 // Note that this file isn't processed by Vite, see https://github.com/brillout/vite-plugin-ssr/issues/562
 
-import express from 'express'
-import compression from 'compression'
-import { renderPage } from 'vite-plugin-ssr/server'
-import { root } from './root'
-import {createHttpLink} from "@apollo/client/link/http"
-import { ApolloClient,InMemoryCache } from '@apollo/client/core'
+import express from 'express'                                                                         //
+import compression from 'compression'                                                                 //                
+import { renderPage } from 'vite-plugin-ssr/server'                                                   //               
+import {createHttpLink} from "@apollo/client/link/http"                                               //      
+import { ApolloClient,InMemoryCache } from '@apollo/client/core'                                      // 
 
-const isProduction = process.env.NODE_ENV === 'production'
+import { root } from './root'                                                                         //                    
+
+const isProduction = process.env.NODE_ENV === 'production'                                            // 
 
 startServer()                                                                                         // Start a react.js with express 
 

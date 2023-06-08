@@ -5,8 +5,12 @@ import compression from 'compression'                                           
 import { renderPage } from 'vite-plugin-ssr/server'                                                   //               
 import {createHttpLink} from "@apollo/client/link/http"                                               //      
 import { ApolloClient,InMemoryCache } from '@apollo/client/core'                                      // 
+import cors from 'cors'                                                                               //
 
 import { root } from './root'                                                                         //                    
+import { expressMiddleware } from '@apollo/server/express4'
+import { ApolloServer } from '@apollo/server'
+import { resolvers, typeDefs } from '#root/src/api/graphql'
 
 const isProduction = process.env.NODE_ENV === 'production'                                            // 
 
@@ -16,6 +20,15 @@ async function startServer() {
   const app = express()                                                                               // Create a express app
 
   app.use(compression())                                                                              // Use compression(middle ware)                        
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers
+  });
+  await server.start()
+
+  app.use(cors())
+  app.use(express.json())
+  app.use('/graphql',expressMiddleware(server))
 
   if (isProduction) {                                                                                 // If production mode
     const sirv = (await import('sirv')).default
@@ -42,10 +55,14 @@ async function startServer() {
     const pageContext = await renderPage(pageContextInit)
     const { httpResponse } = pageContext
     if (!httpResponse) return next()
-    const { body, statusCode, contentType, earlyHints } = httpResponse
-    if (res.writeEarlyHints) res.writeEarlyHints({ link: earlyHints.map((e) => e.earlyHintLink) })
-    res.status(statusCode).type(contentType).send(body)
+    else {
+      const { body, statusCode, contentType, earlyHints } = httpResponse
+      if (res.writeEarlyHints) res.writeEarlyHints({ link: earlyHints.map((e) => e.earlyHintLink) })
+      res.status(statusCode).type(contentType).send(body)
+    }
+
   })
+
 
   const port = process.env.PORT || 3000
   app.listen(port)

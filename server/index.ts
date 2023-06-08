@@ -11,7 +11,7 @@ import { root } from './root'                                                   
 import { expressMiddleware } from '@apollo/server/express4'
 import { ApolloServer } from '@apollo/server'
 import { resolvers, typeDefs } from '#root/src/api/graphql'
-
+import { schema } from '#root/src/api/graphql/schema'
 const isProduction = process.env.NODE_ENV === 'production'                                            // 
 
 startServer()                                                                                         // Start a react.js with express 
@@ -21,8 +21,7 @@ async function startServer() {
 
   app.use(compression())                                                                              // Use compression(middle ware)                        
   const server = new ApolloServer({
-    typeDefs,
-    resolvers
+    typeDefs:schema
   });
   await server.start()
 

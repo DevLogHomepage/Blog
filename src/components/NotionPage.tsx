@@ -6,10 +6,10 @@ import { ExtendedRecordMap } from 'notion-types'
 import { getPageTitle } from 'notion-utils'
 import { NotionRenderer } from 'react-notion-x'
 import dynamic from 'next/dynamic';
-import "react-notion-x/src/styles.css"
 import Link from 'next/link';
-import ModalNotionPage from './ModalNotionPage';
-
+import { useTheme } from "next-themes";
+import { useEffect } from 'react';
+import "@/app/globals_notion.css"
 
 const Collection = dynamic(() =>
   import('react-notion-x/build/third-party/collection').then(
@@ -35,26 +35,26 @@ const Modal = dynamic(
     ssr: false
   }
 )
-const mapPageUrl = (pageId: string) => {
-  return `/notion/${pageId}`
-}
+
 
 export const NotionPage = ({
   recordMap,
-  isRoot = false,
+  baseRoute,
   rootPageId
 }: {
   recordMap: ExtendedRecordMap
-  isRoot?: boolean
+  baseRoute?: string
   rootPageId?: string
 }) => {
   if (!recordMap) {
     return null
   }
+  const mapPageUrl = (pageId: string) => {
+    return `/${baseRoute}${pageId}`
+  }
 
   const title = getPageTitle(recordMap)
   console.log(title, recordMap)
-  // if(isRoot)
     return (
       <>
         <Head>
@@ -66,7 +66,6 @@ export const NotionPage = ({
         
             recordMap={recordMap}
             fullPage={true}
-            darkMode={false}
             mapPageUrl= {mapPageUrl}
             components={{
               nextLink: Link,
@@ -80,15 +79,4 @@ export const NotionPage = ({
         {/* </NotionRenderer> */}
       </>
     )
-  // else 
-  //   return(
-  //     <>
-  //       <Head>
-  //         <meta name='description' content='React Notion X Minimal Demo' />
-
-  //         <title>{title}</title>
-  //       </Head>
-  //       <ModalNotionPage recordMap={recordMap} />
-  //     </>
-  //   )
 }

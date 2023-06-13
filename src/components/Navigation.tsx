@@ -7,13 +7,13 @@ export const Navigation = () => {
         <Link className="navlink" href={'/'}>Home</Link>
       </div>
       <div className="nav-selection">
-        <Link className="navlink" href={'/'}>Home</Link>
+        <Link className="navlink" href={'/'}>Post</Link>
       </div>
       <div className="nav-selection">
         <Link className="navlink" href={'/project'}>Project</Link>
       </div>
       <div className="nav-selection">
-        <Link className="navlink" href={'/'}>Home</Link>
+        <Link className="navlink" href={'/'}>About Me</Link>
       </div>
     </nav>
   )

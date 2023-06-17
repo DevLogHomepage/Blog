@@ -1,5 +1,62 @@
-// TODO: change this to the notion ID of the page you want to test
-export const rootNotionPageId = '067dd719a912471ea9a3ac10710e7fdf'
+//graphql.note.ts -> 데이터를 받아옴
+    // export node
 
-export const isDev =
-  process.env.NODE_ENV === 'development' || !process.env.NODE_ENV
+
+//node -> schema.graphql
+// try to look https://github.dev/gatsbyjs/gatsby -> sort-and-filter(isIntInput)
+
+import { printSchema,GraphQLObjectType,GraphQLSchema, GraphQLString, lexicographicSortSchema, GraphQLFloat, GraphQLList, GraphQLType } from "graphql";
+import { join } from "path";
+import fs from "fs";
+console.log("testing")
+
+const BookType = new GraphQLObjectType({
+  name: 'Book',
+  fields:{
+    title: {type: GraphQLString},
+    author: {type: GraphQLString},
+  } 
+})
+
+const allBookType = new GraphQLObjectType({
+  name: `allBook`,
+  fields:{
+    node: {type: new GraphQLList(BookType)}
+  } 
+})
+
+
+const FloatQueryOperatorInput= new GraphQLObjectType({
+  name: 'FloatQueryOperatorInput',
+  fields:{
+    eq: {type: GraphQLFloat},
+    gt: {type: GraphQLFloat},
+    gte: {type: GraphQLFloat},
+    in: {type: new GraphQLList(GraphQLFloat)},
+    lt: {type: GraphQLFloat},
+    lte: {type: GraphQLFloat},
+    ne: {type: GraphQLFloat},
+    nin: {type: new GraphQLList(GraphQLFloat)},
+  }
+})
+
+const MyAppSchema = new GraphQLSchema({
+  query: allBookType
+})
+
+const testing = lexicographicSortSchema(MyAppSchema)
+console.log(printSchema(testing))
+
+async function pass() {
+  try {
+    const schemaSDLString = printSchema(lexicographicSortSchema(MyAppSchema))
+  
+    // await fs.outputFile("./", schemaSDLString)
+    fs.writeFileSync(".next/grpahql/schema.graphql",schemaSDLString)
+    // reporter.verbose(`Successfully created schema.graphql`)
+  } catch (err) {
+    // reporter.error(`Failed to write schema.graphql to .cache`, err)
+  }
+}
+
+pass()

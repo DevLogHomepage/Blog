@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2016",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -19,11 +19,20 @@
         "name": "next"
       }
     ],
+
+    "experimentalDecorators": true,
+    "typeRoots": ["./node_modules/@types"],
+
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@/app/*": ["./src/app/*"]
+      "@/app/*": ["./src/app/*"],
+      "@lib/*":[ "./lib"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "ts-node": {
+    "esm": true,
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts","/lib/**/*.ts","site.config.ts"],
   "exclude": ["node_modules"]
 }

@@ -2,10 +2,9 @@
 
 import fs from 'fs'
 import path from 'path'
-import pkg from '@next/env'
+import { loadEnvConfig }  from '@next/env'
 import { Spinner, createSpinner } from 'nanospinner'
 
-const { loadEnvConfig } = pkg
 
 export interface IScriptParams {
 	env: any
@@ -20,15 +19,23 @@ const runAsync = async () => {
 	const files = fs
 		.readdirSync(path.join(path.resolve(), 'prebuild/fetch'))
 		.filter(file => file.endsWith('.ts'))
-		.sort()
+
+	files.sort((a,b) => {
+		const aPriority = require(`./fetch/${a}`).getPirority()
+		const bPriority = require(`./fetch/${b}`).getPirority()
+		return aPriority - bPriority
+	})
+
 	for (const file of files) {
-		const { default: defaultFunc }: { default: (params: IScriptParams) => void } = await import(`./fetch/${file}`)
+		const { default: defaultFunc }: { default: (params: IScriptParams) => any } = await import(`./fetch/${file}`)
     const spinner = createSpinner(`Running pre-build script '${file}'`).start();
 		try {
 			// console.log(`Running pre-build script '${file}'`)
 			const result = await defaultFunc({ env: process.env })
       spinner.success({text:`success running ${file}`})
-      console.log(result)
+			if(result){
+				console.log(result)
+			}
 		} catch (e) {
 			// console.error()
       spinner!.error({text:`SCRIPT RUNNER: failed to execute pre-build script '${file}'`})

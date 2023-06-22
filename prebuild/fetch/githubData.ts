@@ -2,8 +2,11 @@ import { Commit, ContentTree } from "@/types/github";
 import axios from "axios";
 import { jsonToSchema } from "nextql_schema";
 import { IScriptParams } from "prebuild";
+import fs from 'fs'
 
 import { FetchingJSONSchemaStore, InputData, JSONSchemaInput, quicktype } from 'quicktype-core';
+import { __Directive } from "graphql";
+import path from "path";
 const header = {
   "Accept": "application/vnd.github+json",
   Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
@@ -83,9 +86,20 @@ async function getGithub(){
   return result
 }
 
+
+const getPirority = () => 1
+
+export { getPirority }
+
 export default async function execute(params: IScriptParams){
+  const nextFile = fs.readdirSync(`${path.resolve(".")}/.next`)
+  if(nextFile.find((file) => file !== "graphql")){
+    try{
+      fs.mkdirSync(`${path.resolve(".")}/.next/graphql`)
+    }
+    catch(e){
+    }
+  }
   const result = await getGithub()
-  const json = jsonToSchema({baseType:'Post',prefix:'',jsonInput:result})
-  return json;
-  // console.log("testing");
+  fs.writeFileSync(`${path.resolve(".")}/.next/graphql/data.json`,JSON.stringify(result),{flag:'w'})
 }

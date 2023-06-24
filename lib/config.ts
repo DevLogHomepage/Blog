@@ -5,7 +5,7 @@
 // // //node -> schema.graphql
 // // // try to look https://github.dev/gatsbyjs/gatsby -> sort-and-filter(isIntInput)
 
-// // import { printSchema,GraphQLObjectType,GraphQLSchema, GraphQLString, lexicographicSortSchema, GraphQLFloat, GraphQLList, GraphQLType } from "graphql";
+import { printSchema,GraphQLObjectType,GraphQLSchema, GraphQLString, lexicographicSortSchema, GraphQLFloat, GraphQLList, GraphQLType, GraphQLInt } from "graphql";
 // // import { join } from "path";
 // // import fs from "fs";
 // // console.log("testing")
@@ -60,27 +60,46 @@
 // // }
 
 
-// // const Node = new GraphQLObjectType({
-// //   name:"node",
-// //   fields:{
-// //     children: {type: new GraphQLList(GraphQLString)},
-// //     content: {type: GraphQLString}
-// //   }
-// // })
+const Node = new GraphQLObjectType({
+  name:"node",
+  fields:{
+    children: {type: new GraphQLList(GraphQLString)},
+    content: {type: GraphQLString}
+  }
+})
 
-// // const SchemaEdges = new GraphQLObjectType({
-// //   name: "edges",
-// //   fields:{
-// //     previous: {type: Node},
-// //     node: {type: Node},
-// //     next: {type: Node}
-// //   }
-// // })
+const SchemaEdges = new GraphQLObjectType({
+  name: "edges",
+  fields:{
+    previous: {type: Node},
+    node: {type: Node},
+    next: {type: Node}
+  }
+})
 
-// // const schemaNodes = new GraphQLObjectType({
-// //   name: "nodes",
-// //   fields:{}
-// // })
+function createModule(typeName:string){
+  return new GraphQLObjectType({
+    name: `all${typeName}`,
+    fields:{
+      edges: {type: SchemaEdges},
+      nodes: {type: new GraphQLList(Node)},
+      totalCount: {type: GraphQLInt},
+    }
+  })
+}
+
+function testing(){
+  const MyAppSchema = new GraphQLSchema({
+    query: createModule("Book")
+  })
+  
+  const testing = lexicographicSortSchema(MyAppSchema)
+  console.log(printSchema(testing))
+  
+}
+
+
+testing()
 
 // // pass()
 

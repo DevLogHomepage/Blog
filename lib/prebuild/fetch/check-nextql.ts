@@ -1,12 +1,12 @@
 import path from "path"
-import { IScriptParams } from "prebuild"
 import fs from 'fs'
+import { NodeAction } from "../index"
 
 const getPirority = () => 0
 
 export { getPirority }
 
-export default async function execute(params: IScriptParams){
+export default async function execute(params: NodeAction){
 
   const nextFile = fs.readdirSync(`${path.resolve(".")}`)
   if(nextFile.find((file) => file !== ".nextql")){

@@ -1,5 +1,5 @@
 import path from "path"
-import { IScriptParams } from "prebuild"
+import { NodeAction } from "../index"
 import fs from 'fs'
 
 const getPirority = () => 1
@@ -21,7 +21,7 @@ export { getPirority }
 // }
 
 
-export default async function execute(){
+export default async function execute(actions:NodeAction){
   const nextFile = fs.readdirSync(`${path.resolve(".")}/.nextql`)
   if(!nextFile.find((file) => file === "graphql")){
     try{
@@ -30,21 +30,23 @@ export default async function execute(){
     catch(e){
     }
   }
+  const testing: { [key:string]: (_:NodeAction) => void } = await import(path.join(path.resolve("."),"./nextql-node.ts"))
 
-  const testing: { [key:string]: () => any } = await import(path.join(path.resolve("."),"./nextql-node.ts"))
   // console.log()
+  // console.log()
+  console.log(testing)
   for await (const [key,exeFunc] of Object.entries(testing)){
+    console.log(key)
     try{
-      const result = await exeFunc()
-      fs.writeFileSync(`${path.resolve(".")}/.nextql/graphql/data.json`,JSON.stringify(result),{flag:'w'})
+      await exeFunc(actions)
+      // createNode(result)
+      
+      // fs.writeFileSync(`${path.resolve(".")}/.nextql/graphql/data.json`,JSON.stringify(result),{flag:'w'})
     }
     catch(e){
       throw new Error(`Error in ${key} function: ${e}`)
     }
   }
-  // Promise.all(Object.entries(testing).forEach(async ([key,exeFunc]) => {
-  //   await createNode(exeFunc())
-  // }))
   
 }
 

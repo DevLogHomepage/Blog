@@ -1,7 +1,10 @@
 import { Commit, ContentTree } from "@/types/github";
+import { open } from 'lmdb'; // or require
+import path from 'path'
 import axios from "axios";
 
 import { __Directive } from "graphql";
+import { NodeAction } from "lib/prebuild";
 interface BaseType {
   id:string
   parent:string
@@ -12,11 +15,12 @@ interface BaseType {
   children:string[]
   content:string
 }
-function createNode<T extends BaseType>(node:T){
-  return {
-    ...node
-  }
-}
+// function createNode<T extends BaseType>(node:T){
+  
+//   return {
+//     ...node
+//   }
+// }
 
 
 const header = {
@@ -41,9 +45,12 @@ function getPostJson(prefix:string,surfix:string,content:string){
   content = content?.replace(title as string,"")
   return [JSON.parse(postData),content]
 }
-async function getGithub(){
 
-  // const result = [] as any
+
+//TODO: need to store data to process not saving data to .nextql folder
+export async function getGithub(actions:NodeAction){
+  // const { createNode } = actions 
+
   const res = await axios.get<ContentTree[]>(`https://api.github.com/repos/dennis0324/blogPost/contents/tech`,{
     headers:header
   })
@@ -61,7 +68,6 @@ async function getGithub(){
       headers:header
     }) 
     const dates = res_commit.data.map((commit) => commit.commit.author?.date)
-    // console.log(dates)
     
     const userNode = {
       id: `${i}`,
@@ -89,14 +95,14 @@ async function getGithub(){
     //   .digest(`hex`);
     // userNode.internal.contentDigest = contentDigest;
 
-    // createNode(userNode);
-    return createNode(userNode)
+    actions.createNode(userNode)
+    return 
   }))
 
   return result
 }
 
 
-export async function github(){
-  return await getGithub()
-}
+// export async function github(){
+//   await getGithub()
+// }

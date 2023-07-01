@@ -4,14 +4,13 @@ export interface NextQlNode {
   children: Array<string>
   internal: {
     type: string
-    counter: number
-    owner: string
+    // counter: number
+    // owner: string
     contentDigest: string
     mediaType?: string
     content?: string
     description?: string
   }
   [key: string]: unknown
-  fields: Array<string>
-
+  // fields: Array<string>
 }

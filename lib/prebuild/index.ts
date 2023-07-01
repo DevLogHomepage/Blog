@@ -4,37 +4,8 @@ import fs from 'fs'
 import path from 'path'
 import { loadEnvConfig }  from '@next/env'
 import { Spinner, createSpinner } from 'nanospinner'
-import lmdb, { open } from 'lmdb'; // or require
-import { NextQlNode } from './types';
-
-
-
-export interface NodeAction {
-	db: lmdb.RootDatabase<any, lmdb.Key>
-	createNode<T extends NextQlNode>(node:T):void
-}
-
-function NodeAction(this:NodeAction):void{
-	this.db = open({
-		path: path.join(path.resolve("."),'.nextql','lmdb'),
-		// any options go here, we can turn on compression like this:
-		compression: true,
-	});
-
-}
-
-NodeAction.prototype.createNode = async function<T extends NextQlNode>(node:T){
-	await this.db.put(`all${node.internal.type}`, []);
-  const getDBvalue = this.db.get(`all${node.internal.type}`)
-	getDBvalue.push(node)
-	await this.db.put(`all${node.internal.type}`,getDBvalue)
-}
-
-
-
 
 loadEnvConfig(process.cwd())
-var nodeAction = new (NodeAction as any)();
 
 // const sleep = (ms = 2000) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -51,10 +22,10 @@ const runAsync = async () => {
 	})
 
 	for (const file of files) {
-		const { default: defaultFunc }: { default: (params: NodeAction) => any } = await import(`./fetch/${file}`)
+		const { default: defaultFunc }: { default: () => any } = await import(`./fetch/${file}`)
     const spinner = createSpinner(`Running pre-build script '${file}'`).start();
 		try {
-			const result = await defaultFunc(nodeAction)
+			const result = await defaultFunc()
       spinner.success({text:`success running ${file}`})
 			if(result){
 				console.log(result)

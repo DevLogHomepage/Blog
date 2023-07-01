@@ -1,6 +1,6 @@
 import path from "path"
 import fs from 'fs'
-import { NodeAction } from "../index"
+import { NodeAction } from "lib/actions"
 
 const getPirority = () => 0
 
@@ -16,4 +16,5 @@ export default async function execute(params: NodeAction){
     catch(e){
     }
   }
+
 }

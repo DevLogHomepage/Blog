@@ -1,6 +1,7 @@
 import path from "path"
-import { NodeAction } from "../index"
+import { NodeAction } from "lib/actions"
 import fs from 'fs'
+import { nextqlWorker,Worker } from "lib/nextql-worker"
 
 const getPirority = () => 1
 
@@ -30,23 +31,11 @@ export default async function execute(actions:NodeAction){
     catch(e){
     }
   }
-  const testing: { [key:string]: (_:NodeAction) => void } = await import(path.join(path.resolve("."),"./nextql-node.ts"))
-
-  // console.log()
-  // console.log()
-  console.log(testing)
-  for await (const [key,exeFunc] of Object.entries(testing)){
-    console.log(key)
-    try{
-      await exeFunc(actions)
-      // createNode(result)
-      
-      // fs.writeFileSync(`${path.resolve(".")}/.nextql/graphql/data.json`,JSON.stringify(result),{flag:'w'})
-    }
-    catch(e){
-      throw new Error(`Error in ${key} function: ${e}`)
-    }
-  }
-  
+  const dbWorker = nextqlWorker(path.join(path.resolve("."),'/lib/data-manager/lmdb-worker.ts'), {})
+  const worker = nextqlWorker(path.join(path.resolve("."),'/lib/nextqlNode-worker.ts'), {})
+  worker.on("message",([type,value]) => {
+    dbWorker.postMessage([type,value])
+    // console.log(value)
+  })
 }
 

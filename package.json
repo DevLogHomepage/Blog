@@ -19,6 +19,7 @@
     "@types/react-dom": "18.2.4",
     "@walmartlabs/json-to-simple-graphql-schema": "^3.0.1",
     "axios": "^1.4.0",
+    "crypto-js": "^4.1.1",
     "dotenv": "^16.1.4",
     "eslint": "8.42.0",
     "eslint-config-next": "13.4.5",
@@ -40,6 +41,7 @@
     "react-dom": "18.2.0",
     "react-modal": "^3.16.1",
     "react-notion-x": "^6.16.0",
+    "redux": "^4.2.1",
     "ts-node": "^10.9.1",
     "typescript": "5.1.3",
     "webpack": "^5.87.0"
@@ -49,6 +51,7 @@
     "@graphql-codegen/client-preset": "4.0.1",
     "@graphql-codegen/typescript": "^4.0.1",
     "@graphql-codegen/typescript-resolvers": "^4.0.1",
+    "@types/crypto-js": "^4.1.1",
     "@types/react-modal": "^3.16.0"
   }
 }

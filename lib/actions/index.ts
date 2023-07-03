@@ -1,7 +1,8 @@
-import { parentPort } from "../nextql-worker";
+import { parentPort } from "../worker/lib/nextql-worker";
 import { NextQlNode } from "lib/prebuild/types";
 import { open,RootDatabase,Key } from "lmdb";
 import path from "path";
+import {SHA256} from 'crypto-js'
 
 export interface NodeAction {
 	db: RootDatabase<any, Key>
@@ -18,7 +19,7 @@ export function NodeAction(this:NodeAction):void{
 }
 
 NodeAction.prototype.createNode = async function<T extends NextQlNode>(node:T){
+	node.internal.sha = SHA256(JSON.stringify(node)).toString() // to discrimination same id of node
   parentPort?.postMessage(['CREATE_NODE',node])
-
 }
 

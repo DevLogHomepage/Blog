@@ -1,10 +1,11 @@
-import { Commit, ContentTree } from "@/types/github";
+import { Commit, ContentTree } from "@src/types/github";
 import { open } from 'lmdb'; // or require
 import path from 'path'
 import axios from "axios";
 
 import { __Directive } from "graphql";
-import { NodeAction } from "lib/prebuild";
+import { NodeAction } from "lib/actions"
+import { NextQlNode } from "lib/prebuild/types";
 interface BaseType {
   id:string
   parent:string
@@ -49,7 +50,7 @@ function getPostJson(prefix:string,surfix:string,content:string){
 
 //TODO: need to store data to process not saving data to .nextql folder
 export async function getGithub(actions:NodeAction){
-  // const { createNode } = actions 
+  const { createNode } = actions 
 
   const res = await axios.get<ContentTree[]>(`https://api.github.com/repos/dennis0324/blogPost/contents/tech`,{
     headers:header
@@ -74,7 +75,7 @@ export async function getGithub(actions:NodeAction){
       parent: `__SOURCE__`,
       internal: {
         type: `Post`, // name of the graphQL query --> allPost {}
-        contentDigest:''
+        sha:''
       },
       children: [],
       title:metaJson.title,
@@ -84,9 +85,7 @@ export async function getGithub(actions:NodeAction){
     }
 
     // result.push(userNode)
-    // console.log(userNode)
 
-    // console.log(userNode)
 
     // result.push(userNode)
     // const contentDigest = crypto
@@ -95,14 +94,9 @@ export async function getGithub(actions:NodeAction){
     //   .digest(`hex`);
     // userNode.internal.contentDigest = contentDigest;
 
-    actions.createNode(userNode)
+    createNode(userNode)
     return 
   }))
 
   return result
 }
-
-
-// export async function github(){
-//   await getGithub()
-// }

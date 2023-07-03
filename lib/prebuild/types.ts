@@ -6,7 +6,7 @@ export interface NextQlNode {
     type: string
     // counter: number
     // owner: string
-    contentDigest: string
+    sha: string
     mediaType?: string
     content?: string
     description?: string
